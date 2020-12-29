@@ -12,6 +12,7 @@
 
 /*List of shortcodes
 /* [currentyear] */
+/* [expires date='2021-03-01'] */
 /* [get_date] */
 /* [get_permalink_url] */
 /* [get_randomhex length=8] */
@@ -52,6 +53,7 @@
 /* [mywindow_alert] Window Alert Shortcode */
 /* [mywrapper class="mywrappername"]Content.....[/mywrapper] Supports class, id, style */
 /* [post_content id=x] post_content [post_content id=x] returns the body of the post*/
+/* [todays_date] */
 
 
 /*-----------------------------------------------------------------------------------*/
@@ -948,6 +950,50 @@ function get_date( $atts, $content = null ) {
 	return $get_date;
 }
 add_shortcode( 'get_date', 'get_date' );
+
+/* --------------------------------------------------------------------- */
+/* ! [todays_date] */
+/* --------------------------------------------------------------------- */
+// [todays_date]
+function todays_date( $atts = null, $content = null ) {
+	extract( shortcode_atts( array(
+				'id' => '',
+				'timezone' => 'America/New_York',
+// 				'format' => 'Y-m-d H:i:s',
+				'format' => 'l, F j, Y \a\t g:i a',
+				
+			), $atts ) );
+	date_default_timezone_set($timezone);
+	$todays_date = date($format);
+	return $todays_date;
+}
+add_shortcode( 'todays_date', 'todays_date' );
+
+
+/* --------------------------------------------------------------------- */
+/* ! [expires date='2021-03-01'] */
+/* --------------------------------------------------------------------- */
+// [expires]
+function expires( $atts = null, $content = null ) {
+	extract( shortcode_atts( array(
+		'id' => '',
+		'date' => '',
+		'timezone' => 'America/New_York',
+		'format' => 'Y-m-d',
+		
+	), $atts ) );
+	date_default_timezone_set($timezone);
+	$todays_date = date($format);
+	$expires = date($date);
+	if ( $todays_date < $expires ) {
+		return $content;
+	}
+	else {
+		return;
+	}
+}
+add_shortcode( 'expires', 'expires' );
+
 
 /* --------------------------------------------------------------------- */
 /* ! Get Timestamp */
