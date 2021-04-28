@@ -1,13 +1,13 @@
 <?php
 /*
-   Plugin Name: Max's Handy Shortcodes
-   Plugin URI: http://matthewfass.com
-   Description: Little shortcodes that go a long way including [myspacer], [mylink], [myurl]
-   Version: 0.36
-   Date: December 28, 2020
-   Author: Max
-   Author URI: http://matthewfass.com
-   License: GPL2
+	Plugin Name: Max's Handy Shortcodes
+	Plugin URI: http://matthewfass.com
+	Description: Little shortcodes that go a long way including [myspacer], [mylink], [myurl]
+	Version: 0.37
+	Date: April 28, 2021
+	Author: Max
+	Author URI: http://matthewfass.com
+	License: GPL2
 */
 
 /*List of shortcodes
@@ -48,6 +48,7 @@
 /* [myspan class="myspanname"]content.....[/myspan] class, style */
 /* [mytab title="Example 1" active="true"]Text.....[/mytab] */
 /* [mytabs]Text.....[/mytabs] */
+/* [mytel]917-497-7852[/mytel] */
 /* [mytestimonial author="authorname" location="morestuff" class="frontpage" readmoretext="Read more testimonials..." readmoreid=""]Text.....[/mytestimonial] */
 /* [myurl url="http://example.com"]Some text to be linked[/myurl] */
 /* [mywindow_alert] Window Alert Shortcode */
@@ -1059,3 +1060,22 @@ function currentyear( $atts, $content = null ) {
 	return $currentyear;
 }
 add_shortcode( 'currentyear', 'currentyear' );
+
+
+/*-----------------------------------------------------------------------------------*/
+/* [mytel]917-497-7852[/mytel] */
+/*-----------------------------------------------------------------------------------*/
+function mytel( $atts, $content = null ) {
+	extract( shortcode_atts( array(
+				'class' => ''
+			), $atts ) );
+	if ($content == '' ) {
+		$link = '';
+	}
+	else {
+		$link = '<a href="tel:'.$content.'"'.$class.'>'.$content.'</a>';
+	}
+	/* return the wrapped content */
+	return $link;
+}
+add_shortcode( 'mytel', 'mytel' );
