@@ -743,7 +743,7 @@ function mytabs( $atts, $content = null ) {
 	
 
 	/* reset global variable $tabdetails */
-	$tabdetails='';
+	unset($tabdetails);
 	return $tabpanel;
 }
 add_shortcode( 'mytabs', 'mytabs' );
