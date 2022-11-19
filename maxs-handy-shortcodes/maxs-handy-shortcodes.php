@@ -3,14 +3,20 @@
 	Plugin Name: Max's Handy Shortcodes
 	Plugin URI: http://matthewfass.com
 	Description: Little shortcodes that go a long way including [myspacer], [mylink], [myurl]
-	Version: 0.37
-	Date: April 28, 2021
+	Version: 0.42
+	Date: November 19, 2022
 	Author: Max
 	Author URI: http://matthewfass.com
 	License: GPL2
 */
 
+// Revisions
+// 2022-05-06 - restore infinite scrolling to media gallery
+// 2022-05-05 - add ACF shortcode [show_acf_field field="author"]
+// 2022-04-01 - restore sidebar and toolbar in block editor with filter
+
 /*List of shortcodes
+/* [mywpautop] */
 /* [currentyear] */
 /* [expires date='2021-03-01'] */
 /* [get_date] */
@@ -55,6 +61,71 @@
 /* [mywrapper class="mywrappername"]Content.....[/mywrapper] Supports class, id, style */
 /* [post_content id=x] post_content [post_content id=x] returns the body of the post*/
 /* [todays_date] */
+
+
+
+/* --------------------------------------------------------------------- */
+/* ! restore infinite scrolling to media gallery */
+/* --------------------------------------------------------------------- */
+add_filter( 'media_library_infinite_scrolling', '__return_true' );
+
+/* --------------------------------------------------------------------- */
+/* ! [show_acf_field field="author"] */
+/* --------------------------------------------------------------------- */
+// [show_acf_field id='']
+function show_acf_field($atts = null, $content = null)
+{
+    extract(shortcode_atts(array(
+        'field' => ''
+    ), $atts));
+
+	if( function_exists('get_field')) { 
+		$show_acf_field = get_field($field);
+		$show_acf_field = ($show_acf_field ? $show_acf_field : 'Field "' . $field . '" was not found for this post type.');
+	} else { 
+		// do nothing
+	} 
+    return $show_acf_field;
+}
+add_shortcode('show_acf_field', 'show_acf_field');
+
+
+
+
+/* --------------------------------------------------------------------- */
+/* ! show admin sidebar in block editor */
+/* --------------------------------------------------------------------- */
+add_action( 'admin_head', function () { ?>
+	<style>
+		.wp-admin .components-popover.nux-dot-tip {
+			display: none !important;
+		}
+	</style>
+
+	<script>
+		jQuery(window).load( function(){
+			wp.data && wp.data.select( 'core/edit-post' ).isFeatureActive( 'welcomeGuide' ) && wp.data.dispatch( 'core/edit-post' ).toggleFeature( 'welcomeGuide' );
+			wp.data && wp.data.select( 'core/edit-post' ).isFeatureActive( 'fullscreenMode' ) && wp.data.dispatch( 'core/edit-post' ).toggleFeature( 'fullscreenMode' );
+		});
+	</script>
+<?php } );
+
+
+
+
+/*-----------------------------------------------------------------------------------*/
+/* [mywpautop] */
+/*-----------------------------------------------------------------------------------*/
+function mywpautop( $atts, $content = null ) {
+	extract( shortcode_atts( array(
+			), $atts ) );
+
+	$content = wpautop(trim($content));
+
+	return $content;
+}
+add_shortcode( 'mywpautop', 'mywpautop' );
+
 
 
 /*-----------------------------------------------------------------------------------*/
